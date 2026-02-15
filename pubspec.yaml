@@ -39,6 +39,8 @@ dependencies:
   flutter_svg:
   cached_network_image:
   socket_io_client: ^2.0.3   # later for live rooms
+  provider: ^6.1.2
+  
 
 
 dev_dependencies:

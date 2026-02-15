@@ -18,7 +18,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 
 class LanguageFilters extends StatelessWidget {
@@ -31,7 +30,7 @@ class LanguageFilters extends StatelessWidget {
       "English (151)",
       "Hindi (37)",
       "Urdu (17)",
-      "Arabic (11)"
+      "Arabic (11)",
     ];
 
     return SizedBox(
@@ -45,9 +44,7 @@ class LanguageFilters extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: index == 0
-                  ? Colors.blue
-                  : const Color(0xff1B2634),
+              color: index == 0 ? Colors.blue : const Color(0xff1B2634),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(filters[index]),

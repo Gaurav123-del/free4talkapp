@@ -41,36 +41,52 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
+import '../models/room_model.dart';
 import '../../../core/app_routes.dart';
 
 class RoomGrid extends StatelessWidget {
-  const RoomGrid({super.key});
+  final List<RoomModel> rooms;
+
+  const RoomGrid({super.key, required this.rooms});
+
+  static const royalBlue = Color(0xff4169E1);
 
   @override
   Widget build(BuildContext context) {
+    /// 🟡 SHOW MESSAGE IF NO ROOMS
+    if (rooms.isEmpty) {
+      return const Center(
+        child: Text(
+          "No groups yet. Create one!",
+          style: TextStyle(color: Colors.white54),
+        ),
+      );
+    }
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 6,
-      gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
+      itemCount: rooms.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
         childAspectRatio: 1.1,
       ),
       itemBuilder: (context, index) {
-        return const RoomCard();
+        final room = rooms[index];
+
+        return RoomCard(room: room);
       },
     );
   }
 }
 
 class RoomCard extends StatelessWidget {
-  const RoomCard({super.key});
+  final RoomModel room;
+
+  const RoomCard({super.key, required this.room});
 
   static const royalBlue = Color(0xff4169E1);
 
@@ -78,8 +94,7 @@ class RoomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /// 👉 CLICK ANY CARD GO NEXT SCREEN
-        Navigator.pushNamed(context, AppRoutes.home);
+        Navigator.pushNamed(context, AppRoutes.room);
       },
       child: Container(
         padding: const EdgeInsets.all(14),
@@ -87,27 +102,34 @@ class RoomCard extends StatelessWidget {
           color: const Color(0xff1B2634),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-            BoxShadow(
-              color: royalBlue.withValues(alpha: 0.2),
-              blurRadius: 18,
-            ),
+            BoxShadow(color: royalBlue.withValues(alpha: 0.2), blurRadius: 18),
           ],
         ),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// 🌐 LANGUAGE + LEVEL
             Row(
               children: [
-                Icon(Icons.public, size: 18),
-                SizedBox(width: 6),
-                Text("English  Beginner"),
+                const Icon(Icons.public, size: 18, color: Colors.white),
+                const SizedBox(width: 6),
+                Text(
+                  "${room.language}  ${room.level}",
+                  style: const TextStyle(color: Colors.white),
+                ),
               ],
             ),
-            Spacer(),
+
+            const Spacer(),
+
+            /// 🟦 TOPIC
             Center(
               child: Text(
-                "Join and talk now!",
-                style: TextStyle(color: royalBlue),
+                room.topic,
+                style: const TextStyle(
+                  color: royalBlue,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ],

@@ -64,36 +64,60 @@
 //   }
 // }
 
+
+
 import 'package:flutter/material.dart';
 import 'widgets/header_bar.dart';
 import 'widgets/language_filters.dart';
 import 'widgets/room_card.dart';
 import 'widgets/profile_panel.dart';
+import 'widgets/top_actions.dart';
+import 'widgets/create_group_dialog.dart';
+import 'models/room_model.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   static const bgColor = Color(0xff0E1621);
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  /// 🧠 DYNAMIC ROOM LIST
+  List<RoomModel> rooms = [];
+
+  /// 🚀 OPEN CREATE GROUP POPUP
+  Future<void> openCreateDialog() async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) => const CreateGroupDialog(),
+    );
+
+    if (result != null && result is RoomModel) {
+      setState(() {
+        rooms.insert(0, result);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: HomeScreen.bgColor,
 
-      /// 👈 PROFILE SIDE PANEL
+      /// 👈 PROFILE PANEL
       drawer: const ProfilePanel(),
 
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
 
-              /// 🔵 HEADER BAR
+              /// 🔵 HEADER
               const HeaderBar(),
 
               const SizedBox(height: 24),
@@ -109,15 +133,21 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
 
+              const SizedBox(height: 20),
+
+              /// 🔥 TOP ACTIONS (CREATE GROUP BUTTON)
+              TopActions(
+                onCreateGroup: openCreateDialog,
+              ),
+
               const SizedBox(height: 24),
 
-              /// 🧩 LANGUAGE FILTERS
               const LanguageFilters(),
 
               const SizedBox(height: 24),
 
-              /// 🔥 ROOM GRID SECTION
-              const RoomGrid(),
+              /// 🎤 ROOM GRID (DYNAMIC)
+              RoomGrid(rooms: rooms),
             ],
           ),
         ),
